@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adobe LLM Optimizer — AI-Powered Brand Visibility</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --adobe-red: #FA0F00;
+      --magenta: #e91e8c;
+      --orange: #FF6B00;
+      --deep-black: #0a0a0a;
+      --card-bg: #121212;
+      --surface: #1a1a1a;
+      --border: rgba(255,255,255,0.08);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255,255,255,0.62);
+      --text-muted: rgba(255,255,255,0.38);
+      --gradient-hero: linear-gradient(135deg, #FA0F00 0%, #e91e8c 45%, #FF6B00 100%);
+      --gradient-subtle: linear-gradient(135deg, rgba(250,15,0,0.15) 0%, rgba(233,30,140,0.1) 50%, rgba(255,107,0,0.12) 100%);
+      --shadow-card: 0 4px 32px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.06) inset;
+      --radius: 16px;
+      --radius-sm: 8px;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--deep-black); color: var(--text-primary);
+      font-family: var(--font-body); font-size: 17px; line-height: 1.65;
+      overflow-x: hidden; -webkit-font-smoothing: antialiased;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    .tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--adobe-red);
+      background: rgba(250,15,0,0.12); border: 1px solid rgba(250,15,0,0.3);
+      padding: 5px 12px; border-radius: 100px;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--font-body); font-weight: 700; font-size: 15px;
+      letter-spacing: 0.02em; padding: 14px 30px; border-radius: 100px;
+      border: none; cursor: pointer; text-decoration: none;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative; overflow: hidden;
+    }
+    .btn::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.15); opacity: 0; transition: opacity 0.2s; }
+    .btn:hover::after { opacity: 1; }
+    .btn:hover { transform: translateY(-2px) scale(1.02); }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--gradient-hero); color: #fff; box-shadow: 0 8px 32px rgba(250,15,0,0.4); }
+    .btn-secondary { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,0.3); }
+    .btn-secondary:hover { border-color: var(--adobe-red); box-shadow: 0 0 20px rgba(250,15,0,0.2); }
+
+    .section-label { text-align: center; margin-bottom: 16px; }
+    .section-title { font-family: var(--font-display); font-size: clamp(42px, 6vw, 72px); letter-spacing: 0.01em; line-height: 0.95; text-align: center; margin-bottom: 20px; }
+    .section-subtitle { color: var(--text-secondary); text-align: center; max-width: 580px; margin: 0 auto 56px; font-size: 18px; font-weight: 300; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 18px 24px; display: flex; align-items: center; justify-content: space-between;
+      background: rgba(10,10,10,0.7); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border); transition: all 0.3s;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-logo-text { font-family: var(--font-display); font-size: 22px; letter-spacing: 0.05em; color: #fff; }
+    .nav-logo-text span { color: var(--adobe-red); }
+    .nav-cta { font-size: 13px; padding: 10px 22px; }
+
+    /* HERO */
+    #hero { min-height: 100vh; display: flex; align-items: center; padding: 120px 24px 80px; position: relative; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; z-index: 0; }
+    .hero-bg::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.5; z-index: 1;
+    }
+    .orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; }
+    .orb-1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(250,15,0,0.35) 0%, transparent 70%); top: -100px; right: -100px; animation: drift1 12s ease-in-out infinite alternate; }
+    .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(233,30,140,0.25) 0%, transparent 70%); bottom: 0; left: -80px; animation: drift2 10s ease-in-out infinite alternate; }
+    .orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,107,0,0.2) 0%, transparent 70%); top: 40%; right: 20%; animation: drift3 14s ease-in-out infinite alternate; }
+    @keyframes drift1 { to { transform: translate(-40px, 40px); } }
+    @keyframes drift2 { to { transform: translate(40px, -30px); } }
+    @keyframes drift3 { to { transform: translate(-20px, 30px); } }
+    .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 80px 80px; }
+    .hero-inner { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; width: 100%; }
+    .hero-eyebrow { margin-bottom: 28px; opacity: 0; animation: fadeUp 0.7s 0.1s forwards; }
+    .hero-headline { font-family: var(--font-display); font-size: clamp(68px, 10vw, 148px); line-height: 0.88; letter-spacing: -0.01em; margin-bottom: 32px; opacity: 0; animation: fadeUp 0.7s 0.25s forwards; }
+    .hero-headline .line-accent { display: block; background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-sub { font-size: clamp(17px, 2vw, 21px); color: var(--text-secondary); max-width: 580px; margin-bottom: 44px; font-weight: 300; line-height: 1.55; opacity: 0; animation: fadeUp 0.7s 0.4s forwards; }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s 0.55s forwards; }
+    .hero-scroll { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0; animation: fadeIn 1s 1.2s forwards; }
+    .scroll-line { width: 1px; height: 48px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.5)); animation: scrollPulse 2s ease-in-out infinite; }
+    @keyframes scrollPulse { 0%, 100% { opacity: 0.3; transform: scaleY(0.8); } 50% { opacity: 1; transform: scaleY(1); } }
+    .hero-badge { position: absolute; top: 30%; right: 5%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; display: flex; flex-direction: column; gap: 4px; opacity: 0; animation: fadeUp 0.8s 0.8s forwards; box-shadow: var(--shadow-card); }
+    .hero-badge-label { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; }
+    .hero-badge-value { font-family: var(--font-display); font-size: 36px; color: var(--adobe-red); line-height: 1; }
+    .hero-badge-desc { font-size: 13px; color: var(--text-secondary); }
+
+    /* PROBLEM STRIP */
+    #problem { padding: 72px 0; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .problem-inner { display: flex; align-items: flex-start; gap: 56px; flex-wrap: wrap; justify-content: center; }
+    .problem-text { max-width: 480px; }
+    .problem-text h2 { font-family: var(--font-display); font-size: clamp(32px, 4vw, 52px); line-height: 0.95; margin: 16px 0; }
+    .problem-text h2 span { background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .problem-text p { color: var(--text-secondary); font-size: 17px; line-height: 1.65; }
+    .problem-stats { display: flex; flex-direction: column; gap: 16px; }
+    .problem-stat { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px 28px; display: flex; align-items: center; gap: 20px; min-width: 320px; }
+    .problem-stat-num { font-family: var(--font-display); font-size: 44px; line-height: 1; background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; flex-shrink: 0; }
+    .problem-stat-label { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+    .problem-stat-source { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-family: var(--font-mono); }
+
+    /* PRODUCT CARD */
+    #products { padding: 100px 0; position: relative; }
+    #products::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--adobe-red), transparent); }
+    .product-showcase { margin-top: 16px; }
+    .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: grid; grid-template-columns: 1fr 1fr; min-height: 540px; transition: border-color 0.3s, box-shadow 0.3s; }
+    .product-card:hover { border-color: rgba(250,15,0,0.3); box-shadow: 0 0 60px rgba(250,15,0,0.1); }
+    .product-card-content { padding: 56px; display: flex; flex-direction: column; justify-content: center; gap: 24px; }
+    .product-icon-wrap { width: 72px; height: 72px; border-radius: 18px; background: var(--gradient-hero); display: flex; align-items: center; justify-content: center; font-size: 32px; color: #fff; box-shadow: 0 12px 40px rgba(250,15,0,0.4); position: relative; }
+    .product-icon-wrap::after { content: ''; position: absolute; inset: -1px; border-radius: 19px; background: var(--gradient-hero); z-index: -1; opacity: 0.4; filter: blur(12px); }
+    .product-name { font-family: var(--font-display); font-size: 48px; letter-spacing: 0.01em; line-height: 0.9; }
+    .product-name span { display: block; font-size: 20px; font-family: var(--font-body); font-weight: 300; color: var(--text-secondary); letter-spacing: 0; margin-top: 6px; }
+    .product-desc { color: var(--text-secondary); font-size: 16px; line-height: 1.65; max-width: 400px; }
+    .product-audience { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--orange); background: rgba(255,107,0,0.1); border: 1px solid rgba(255,107,0,0.25); padding: 8px 16px; border-radius: 100px; }
+    .product-differentiator { background: linear-gradient(135deg, rgba(250,15,0,0.08), rgba(233,30,140,0.08)); border: 1px solid rgba(250,15,0,0.15); border-radius: var(--radius); padding: 20px 24px; display: flex; align-items: flex-start; gap: 16px; }
+    .diff-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(250,15,0,0.15); display: flex; align-items: center; justify-content: center; color: var(--adobe-red); font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+    .diff-text strong { display: block; font-size: 14px; margin-bottom: 3px; }
+    .diff-text p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+    .product-link { display: inline-flex; align-items: center; gap: 8px; color: var(--adobe-red); font-weight: 700; font-size: 15px; text-decoration: none; transition: gap 0.2s; }
+    .product-link:hover { gap: 14px; }
+    .product-card-visual { background: var(--surface); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .product-card-visual::before { content: ''; position: absolute; inset: 0; background: var(--gradient-subtle); }
+    .viz-container { position: relative; z-index: 1; padding: 40px; width: 100%; }
+    .viz-title { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 24px; }
+    .llm-list { display: flex; flex-direction: column; gap: 14px; }
+    .llm-row { display: flex; align-items: center; gap: 14px; }
+    .llm-name { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); min-width: 90px; text-align: right; }
+    .llm-bar-track { flex: 1; height: 10px; background: rgba(255,255,255,0.06); border-radius: 100px; overflow: hidden; }
+    .llm-bar-fill { height: 100%; border-radius: 100px; background: var(--gradient-hero); width: 0; transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
+    .llm-score { font-size: 12px; font-family: var(--font-mono); color: var(--text-secondary); min-width: 32px; }
+    .visibility-score { margin-top: 28px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; }
+    .vs-label { font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+    .vs-value { font-family: var(--font-display); font-size: 52px; background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; }
+    .vs-sub { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+
+    /* HOW IT WORKS */
+    #how { padding: 100px 0; background: var(--surface); position: relative; overflow: hidden; }
+    #how::before { content: ''; position: absolute; width: 800px; height: 800px; border-radius: 50%; background: radial-gradient(circle, rgba(250,15,0,0.06) 0%, transparent 70%); top: -200px; right: -200px; pointer-events: none; }
+    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; position: relative; z-index: 1; }
+    .step-card { background: var(--card-bg); border: 1px solid var(--border); padding: 40px 32px; display: flex; flex-direction: column; gap: 20px; position: relative; overflow: hidden; transition: border-color 0.3s, transform 0.3s; }
+    .step-card:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+    .step-card:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+    .step-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gradient-hero); opacity: 0; transition: opacity 0.3s; }
+    .step-card:hover { border-color: rgba(250,15,0,0.2); transform: translateY(-4px); }
+    .step-card:hover::before { opacity: 1; }
+    .step-num { font-family: var(--font-display); font-size: 72px; line-height: 1; background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; opacity: 0.3; }
+    .step-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+    .step-icon.red { background: rgba(250,15,0,0.12); color: var(--adobe-red); }
+    .step-icon.magenta { background: rgba(233,30,140,0.12); color: var(--magenta); }
+    .step-icon.orange { background: rgba(255,107,0,0.12); color: var(--orange); }
+    .step-title { font-family: var(--font-display); font-size: 28px; letter-spacing: 0.02em; line-height: 1; }
+    .step-desc { color: var(--text-secondary); font-size: 15px; line-height: 1.65; }
+    .step-bullets { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .step-bullets li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+    .step-bullets li::before { content: '→'; color: var(--adobe-red); flex-shrink: 0; margin-top: 1px; }
+
+    /* FEATURES */
+    #features { padding: 100px 0; position: relative; }
+    #features::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--magenta), transparent); }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .feature-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px 32px; display: flex; flex-direction: column; gap: 20px; transition: border-color 0.3s, transform 0.3s; position: relative; overflow: hidden; }
+    .feature-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gradient-hero); opacity: 0; transition: opacity 0.3s; }
+    .feature-card:hover { border-color: rgba(250,15,0,0.2); transform: translateY(-4px); }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+    .feature-icon.red { background: rgba(250,15,0,0.12); color: var(--adobe-red); }
+    .feature-icon.magenta { background: rgba(233,30,140,0.12); color: var(--magenta); }
+    .feature-icon.orange { background: rgba(255,107,0,0.12); color: var(--orange); }
+    .feature-title { font-family: var(--font-display); font-size: 26px; letter-spacing: 0.02em; line-height: 1; }
+    .feature-desc { color: var(--text-secondary); font-size: 15px; line-height: 1.65; }
+    .feature-meta { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+
+    /* STATS */
+    #stats { padding: 0; }
+    .stats-bar { background: var(--gradient-hero); padding: 64px 24px; display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap; position: relative; overflow: hidden; }
+    .stats-bar::before { content: ''; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E"); }
+    .stat-item { flex: 1; min-width: 260px; text-align: center; padding: 24px 40px; position: relative; }
+    .stat-item + .stat-item::before { content: ''; position: absolute; left: 0; top: 20%; height: 60%; width: 1px; background: rgba(255,255,255,0.25); }
+    .stat-num { font-family: var(--font-display); font-size: clamp(56px, 7vw, 84px); color: #fff; line-height: 0.9; letter-spacing: -0.01em; }
+    .stat-label { font-size: 15px; color: rgba(255,255,255,0.85); margin-top: 10px; }
+    .stat-source { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 6px; font-family: var(--font-mono); }
+
+    /* FOOTER CTA */
+    #footer-cta { padding: 120px 24px; text-align: center; position: relative; overflow: hidden; }
+    #footer-cta::before { content: ''; position: absolute; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(250,15,0,0.12) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+    .footer-cta-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+    .footer-title { font-family: var(--font-display); font-size: clamp(52px, 7vw, 100px); line-height: 0.9; margin: 24px 0 32px; }
+    .footer-title .accent { background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .footer-desc { color: var(--text-secondary); font-size: 18px; font-weight: 300; max-width: 480px; margin: 0 auto 48px; }
+    .footer-actions { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+
+    footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .footer-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .footer-copy { font-size: 13px; color: var(--text-muted); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text-secondary); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 0.4; } }
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1), transform 0.7s cubic-bezier(0.25, 1, 0.5, 1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* RESPONSIVE */
+    @media (max-width: 960px) {
+      .product-card { grid-template-columns: 1fr; }
+      .product-card-visual { min-height: 320px; }
+      .product-card-content { padding: 36px 32px; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .step-card:first-child { border-radius: var(--radius) var(--radius) 0 0; }
+      .step-card:last-child { border-radius: 0 0 var(--radius) var(--radius); }
+      .hero-badge { display: none; }
+      .stat-item + .stat-item::before { display: none; }
+    }
+    @media (max-width: 620px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .product-card-content { padding: 28px 24px; }
+      .hero-actions { flex-direction: column; align-items: flex-start; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+      .problem-inner { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-logo">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px;height:36px;">
+        <rect width="48" height="48" rx="8" fill="#FA0F00"/>
+        <path d="M27.5 8L42 40H32.5L27.5 27L22.5 40H13L27.5 8Z" fill="white"/>
+        <path d="M6 40L15 8L20.5 22H10L6 40Z" fill="white" opacity="0.85"/>
+      </svg>
+      <span class="nav-logo-text">Adobe <span>LLM Optimizer</span></span>
+    </a>
+    <a href="https://business.adobe.com/products/llm-optimizer.html" target="_blank" class="btn btn-primary nav-cta">Get Started</a>
+  </nav>
+
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    <div class="hero-inner">
+      <div class="hero-eyebrow">
+        <span class="tag"><i class="fa-solid fa-bolt"></i> New from Adobe</span>
+      </div>
+      <h1 class="hero-headline">
+        Own Your Brand<br />
+        <span class="line-accent">In AI Search.</span>
+      </h1>
+      <p class="hero-sub">
+        Adobe LLM Optimizer helps you shape how your brand shows up in AI-powered search results — driving measurable visibility, qualified traffic, and influence across ChatGPT, Gemini, Perplexity, and beyond.
+      </p>
+      <div class="hero-actions">
+        <a href="https://business.adobe.com/products/llm-optimizer.html" target="_blank" class="btn btn-primary">
+          Explore LLM Optimizer <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="#how" class="btn btn-secondary">See How It Works</a>
+      </div>
+    </div>
+    <div class="hero-badge">
+      <span class="hero-badge-label">Organic Traffic Lost</span>
+      <span class="hero-badge-value">50%+</span>
+      <span class="hero-badge-desc">by 2028 from AI search shifts</span>
+    </div>
+    <div class="hero-scroll"><div class="scroll-line"></div></div>
+  </section>
+
+
+  <!-- THE PROBLEM -->
+  <section id="problem">
+    <div class="container">
+      <div class="problem-inner reveal">
+        <div class="problem-text">
+          <span class="tag"><i class="fa-solid fa-triangle-exclamation"></i> The Shift Is Already Here</span>
+          <h2>AI is changing how<br /><span>customers find you.</span></h2>
+          <p style="margin-top:16px;">
+            Instead of clicking through search results, customers now get answers directly from AI. If your brand isn't cited in those answers, you don't exist in that moment. LLM Optimizer makes sure you do.
+          </p>
+        </div>
+        <div class="problem-stats">
+          <div class="problem-stat">
+            <div class="problem-stat-num">50%+</div>
+            <div>
+              <div class="problem-stat-label">decrease in brands' organic search traffic projected by 2028 as consumers shift to AI-powered search</div>
+              <div class="problem-stat-source">Source: Gartner</div>
+            </div>
+          </div>
+          <div class="problem-stat">
+            <div class="problem-stat-num">80%</div>
+            <div>
+              <div class="problem-stat-label">of consumers rely on AI-written results for at least 40% of their searches, reducing organic web traffic 15–25%</div>
+              <div class="problem-stat-source">Source: Bain & Company</div>
+            </div>
+          </div>
+          <div class="problem-stat">
+            <div class="problem-stat-num">4700%</div>
+            <div>
+              <div class="problem-stat-label">rise in generative AI-powered shopping traffic to U.S. retail sites</div>
+              <div class="problem-stat-source">Source: Adobe Digital Intelligence</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- PRODUCT SPOTLIGHT -->
+  <section id="products">
+    <div class="container">
+      <div class="section-label reveal">
+        <span class="tag"><i class="fa-solid fa-layer-group"></i> Product Spotlight</span>
+      </div>
+      <h2 class="section-title reveal reveal-delay-1">Meet LLM Optimizer</h2>
+      <p class="section-subtitle reveal reveal-delay-2">
+        The enterprise solution for AI search visibility — track where your brand appears, optimize how it's cited, and prove the business impact.
+      </p>
+
+      <div class="product-showcase">
+        <div class="product-card reveal">
+          <div class="product-card-content">
+            <div class="product-icon-wrap">
+              <i class="fa-solid fa-magnifying-glass-chart"></i>
+            </div>
+            <div class="product-name">
+              LLM Optimizer
+              <span>Adobe AI Suite · Enterprise</span>
+            </div>
+            <p class="product-desc">
+              Adobe LLM Optimizer is a generative AI search and discovery optimization solution that helps brands improve how their content is cited and surfaced across major LLMs — including ChatGPT, Gemini, Perplexity, and Claude. It provides automated insights, prescriptive recommendations, and one-click content deployment so your brand stays visible, cited, and chosen.
+            </p>
+            <div class="product-audience">
+              <i class="fa-solid fa-users"></i>
+              Built for SEO, digital marketing, content & web publishing teams
+            </div>
+            <div class="product-differentiator">
+              <div class="diff-icon"><i class="fa-solid fa-star"></i></div>
+              <div class="diff-text">
+                <strong>Standout Feature: Auto-Optimize with One-Click Deployment</strong>
+                <p>Identify visibility gaps, receive AI-generated fix recommendations, and publish updates in a single click — directly through Adobe Experience Manager or your own CMS via API.</p>
+              </div>
+            </div>
+            <a href="https://business.adobe.com/products/llm-optimizer.html" target="_blank" class="product-link">
+              Learn more about LLM Optimizer <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+
+          <div class="product-card-visual">
+            <div class="viz-container">
+              <div class="viz-title">AI Visibility Score · Brand Dashboard</div>
+              <div class="llm-list" id="llmBars">
+                <div class="llm-row">
+                  <span class="llm-name">ChatGPT</span>
+                  <div class="llm-bar-track"><div class="llm-bar-fill" data-width="78"></div></div>
+                  <span class="llm-score">78</span>
+                </div>
+                <div class="llm-row">
+                  <span class="llm-name">Perplexity</span>
+                  <div class="llm-bar-track"><div class="llm-bar-fill" data-width="65"></div></div>
+                  <span class="llm-score">65</span>
+                </div>
+                <div class="llm-row">
+                  <span class="llm-name">Gemini</span>
+                  <div class="llm-bar-track"><div class="llm-bar-fill" data-width="82"></div></div>
+                  <span class="llm-score">82</span>
+                </div>
+                <div class="llm-row">
+                  <span class="llm-name">Claude</span>
+                  <div class="llm-bar-track"><div class="llm-bar-fill" data-width="59"></div></div>
+                  <span class="llm-score">59</span>
+                </div>
+              </div>
+              <div class="visibility-score">
+                <div class="vs-label">Overall Visibility Score</div>
+                <div class="vs-value" id="visScore">0</div>
+                <div class="vs-sub">Factors in frequency, prominence, accuracy & sentiment</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="container">
+      <div class="section-label reveal">
+        <span class="tag"><i class="fa-solid fa-gears"></i> How It Works</span>
+      </div>
+      <h2 class="section-title reveal reveal-delay-1">From Invisible<br />To Unmissable</h2>
+      <p class="section-subtitle reveal reveal-delay-2">
+        LLM Optimizer runs a continuous three-step intelligence loop that keeps your brand visible and competitive across every AI search platform.
+      </p>
+      <div class="steps-grid">
+
+        <div class="step-card reveal">
+          <div class="step-num">01</div>
+          <div class="step-icon red"><i class="fa-solid fa-eye"></i></div>
+          <div class="step-title">Auto Identify</div>
+          <p class="step-desc">Continuously analyze LLM activity and visibility to detect opportunities to improve your brand's prominence and citations in AI search.</p>
+          <ul class="step-bullets">
+            <li>Track where, when, and how often your brand is mentioned across LLMs</li>
+            <li>Get a Visibility Score factoring frequency, prominence, accuracy & sentiment</li>
+            <li>Monitor competitor share-of-voice and sentiment in AI answers</li>
+            <li>Uncover which AI-driven searches lead to qualified traffic and conversions</li>
+          </ul>
+        </div>
+
+        <div class="step-card reveal reveal-delay-1">
+          <div class="step-num">02</div>
+          <div class="step-icon magenta"><i class="fa-solid fa-lightbulb"></i></div>
+          <div class="step-title">Auto Suggest</div>
+          <p class="step-desc">Leverage models trained on LLM technical content optimization to propose targeted solutions that capitalize on identified visibility gaps.</p>
+          <ul class="step-bullets">
+            <li>Technical fixes: structured data validation and crawler accessibility</li>
+            <li>On-site content: FAQs, blogs, and headings tied to real customer queries</li>
+            <li>Off-site insights: opportunities in forums, Quora, Reddit, and Wikipedia</li>
+            <li>Recommendations ranked by measurable impact level</li>
+          </ul>
+        </div>
+
+        <div class="step-card reveal reveal-delay-2">
+          <div class="step-num">03</div>
+          <div class="step-icon orange"><i class="fa-solid fa-rocket"></i></div>
+          <div class="step-title">Auto Optimize</div>
+          <p class="step-desc">Implement proposed solutions with user approval and deploy instantly — no engineering ticket, no waiting, no friction.</p>
+          <ul class="step-bullets">
+            <li>One-click publishing through Adobe Experience Manager Sites</li>
+            <li>API integrations for any custom enterprise CMS</li>
+            <li>Agent2Agent (A2A) and Model Context Protocol (MCP) support</li>
+            <li>Generate LLM-ready page versions without changing what human readers see</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FEATURE CARDS -->
+  <section id="features">
+    <div class="container">
+      <div class="section-label reveal">
+        <span class="tag"><i class="fa-solid fa-wand-magic-sparkles"></i> Capabilities</span>
+      </div>
+      <h2 class="section-title reveal reveal-delay-1">Everything You Need<br />To Win AI Search</h2>
+      <p class="section-subtitle reveal reveal-delay-2">
+        A complete toolkit for measuring, improving, and proving your brand's presence across every major generative AI engine.
+      </p>
+      <div class="features-grid">
+
+        <div class="feature-card reveal">
+          <div class="feature-icon red"><i class="fa-solid fa-chart-bar"></i></div>
+          <div class="feature-title">LLM Search Visibility</div>
+          <p class="feature-desc">
+            Discover how visible your brand is in AI tools like ChatGPT, Perplexity, and Gemini. Track a unified Visibility Score — incorporating frequency, prominence, accuracy, and sentiment — across all major LLMs over time.
+          </p>
+          <div class="feature-meta">Brand Monitoring · Multi-LLM Coverage</div>
+        </div>
+
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon magenta"><i class="fa-solid fa-users-viewfinder"></i></div>
+          <div class="feature-title">Competitive Analysis</div>
+          <p class="feature-desc">
+            See how often competitors appear alongside your brand in AI answers. Monitor sentiment comparisons and share-of-voice in a single dashboard — and identify the topics each brand owns in AI results.
+          </p>
+          <div class="feature-meta">Competitive Intelligence · Sentiment Scoring</div>
+        </div>
+
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon orange"><i class="fa-solid fa-arrow-trend-up"></i></div>
+          <div class="feature-title">Traffic Attribution</div>
+          <p class="feature-desc">
+            Quantify the business impact of AI search visibility. See how LLM exposure converts to qualified traffic, engagement, and revenue — and export live dashboards or reports for leadership in a variety of formats.
+          </p>
+          <div class="feature-meta">Revenue Impact · Exportable Dashboards</div>
+        </div>
+
+        <div class="feature-card reveal">
+          <div class="feature-icon red"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+          <div class="feature-title">Technical Recommendations</div>
+          <p class="feature-desc">
+            Get prescriptive fixes for structured data, crawler accessibility, and LLM-readable content. Generate LLM-ready page versions for agentic readers — without touching what human visitors see.
+          </p>
+          <div class="feature-meta">On-Site Optimization · Technical GEO</div>
+        </div>
+
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon magenta"><i class="fa-solid fa-file-pen"></i></div>
+          <div class="feature-title">Content & Off-Site Insights</div>
+          <p class="feature-desc">
+            Improve how LLMs read and cite your content. Get on-site suggestions for FAQs, blog topics, and structured headings, plus off-site opportunities in forums, Quora, Reddit, and Wikipedia that influence AI answers.
+          </p>
+          <div class="feature-meta">Content Strategy · Forum & Link Insights</div>
+        </div>
+
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon orange"><i class="fa-solid fa-plug"></i></div>
+          <div class="feature-title">Enterprise Integrations</div>
+          <p class="feature-desc">
+            Works standalone — no other Adobe products required. Integrates natively with Adobe Experience Manager Sites and supports open standards including Agent2Agent (A2A) and Model Context Protocol (MCP) for any enterprise stack.
+          </p>
+          <div class="feature-meta">AEM · A2A · MCP · API-First</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- STATS BAR -->
+  <section id="stats">
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-num reveal-stat" data-target="50" data-suffix="%+">0</div>
+        <div class="stat-label">projected drop in brands' organic search traffic by 2028</div>
+        <div class="stat-source">Gartner</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num reveal-stat" data-target="80" data-suffix="%">0</div>
+        <div class="stat-label">of consumers rely on AI results for 40%+ of their searches</div>
+        <div class="stat-source">Bain & Company</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num reveal-stat" data-target="4700" data-suffix="%">0</div>
+        <div class="stat-label">rise in AI-powered shopping traffic to U.S. retail sites</div>
+        <div class="stat-source">Adobe Digital Intelligence</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FOOTER CTA -->
+  <section id="footer-cta">
+    <div class="footer-cta-inner">
+      <div class="section-label">
+        <span class="tag"><i class="fa-solid fa-rocket"></i> Get Started</span>
+      </div>
+      <h2 class="footer-title">
+        Ready to Own<br /><span class="accent">AI Search?</span>
+      </h2>
+      <p class="footer-desc">
+        Talk to Adobe about how LLM Optimizer can help your brand stay visible, cited, and chosen as AI reshapes how customers discover and decide.
+      </p>
+      <div class="footer-actions">
+        <a href="https://business.adobe.com/products/llm-optimizer.html" target="_blank" class="btn btn-primary" style="font-size:17px; padding:18px 36px;">
+          Request a Demo <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="https://business.adobe.com/products/llm-optimizer.html" target="_blank" class="btn btn-secondary" style="font-size:17px; padding:18px 36px;">
+          Explore LLM Optimizer
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FOOTER BOTTOM -->
+  <footer>
+    <div class="footer-bottom">
+      <a href="#" class="footer-logo">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px;">
+          <rect width="48" height="48" rx="8" fill="#FA0F00"/>
+          <path d="M27.5 8L42 40H32.5L27.5 27L22.5 40H13L27.5 8Z" fill="white"/>
+          <path d="M6 40L15 8L20.5 22H10L6 40Z" fill="white" opacity="0.85"/>
+        </svg>
+        <span style="font-family:var(--font-display);font-size:18px;letter-spacing:0.05em;color:rgba(255,255,255,0.6);margin-left:10px;">Adobe</span>
+      </a>
+      <span class="footer-copy">© 2026 Adobe Inc. All rights reserved. · Adobe LLM Optimizer</span>
+      <div class="footer-links">
+        <a href="https://www.adobe.com/privacy.html" target="_blank">Privacy</a>
+        <a href="https://www.adobe.com/legal/terms.html" target="_blank">Terms</a>
+        <a href="https://business.adobe.com/request-consultation.html" target="_blank">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <script>
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // LLM bars + visibility score
+    const barObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          document.querySelectorAll('.llm-bar-fill').forEach((bar, i) => {
+            setTimeout(() => { bar.style.width = bar.dataset.width + '%'; }, i * 180);
+          });
+          animateCounter(document.getElementById('visScore'), 0, 71, 1600);
+          barObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    const llmBars = document.getElementById('llmBars');
+    if (llmBars) barObserver.observe(llmBars);
+
+    // Stat counters
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          document.querySelectorAll('.reveal-stat').forEach(el => {
+            animateCounter(el, 0, parseInt(el.dataset.target), 1800, el.dataset.suffix || '%');
+          });
+          statObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.4 });
+    document.querySelectorAll('.stats-bar').forEach(el => statObserver.observe(el));
+
+    function animateCounter(el, start, end, duration, suffix = '') {
+      const startTime = performance.now();
+      function update(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(start + (end - start) * eased) + suffix;
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+
+    // Nav scroll
+    window.addEventListener('scroll', () => {
+      document.querySelector('nav').style.background = window.scrollY > 60
+        ? 'rgba(10,10,10,0.95)' : 'rgba(10,10,10,0.7)';
+    }, { passive: true });
+  </script>
+
+</body>
+</html>
